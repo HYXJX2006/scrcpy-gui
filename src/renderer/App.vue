@@ -18,6 +18,12 @@
             @quit-app="onQuitApp"
             @cancel="onCancelClose"
           />
+          <UpdateDialog
+            :visible="showUpdateDialog"
+            :info="updateInfo"
+            current-version="1.0.1"
+            @close="showUpdateDialog = false"
+          />
         </n-notification-provider>
       </n-dialog-provider>
     </n-message-provider>
@@ -30,6 +36,7 @@ import { lightTheme, zhCN, dateZhCN } from 'naive-ui'
 import TitleBar from './components/layout/TitleBar.vue'
 import SideNav from './components/layout/SideNav.vue'
 import CloseDialog from './components/common/CloseDialog.vue'
+import UpdateDialog from './components/common/UpdateDialog.vue'
 import { useDeviceStore } from './stores/device'
 import { useSessionStore } from './stores/session'
 
@@ -37,6 +44,8 @@ const deviceStore = useDeviceStore()
 const sessionStore = useSessionStore()
 const isMaximized = ref(false)
 const showCloseDialog = ref(false)
+const showUpdateDialog = ref(false)
+const updateInfo = ref<{ version: string; notes: string; url: string } | null>(null)
 
 async function toggleMaximize(): Promise<void> {
   window.scrcpyAPI.maximizeWindow()
@@ -70,6 +79,16 @@ onMounted(() => {
   window.scrcpyAPI.onShowCloseDialog(() => {
     showCloseDialog.value = true
   })
+
+  // Check for updates on startup
+  window.scrcpyAPI.onUpdateAvailable((info) => {
+    updateInfo.value = info
+    showUpdateDialog.value = true
+  })
+  // Delay 3 seconds before checking to avoid slowing down startup
+  setTimeout(() => {
+    window.scrcpyAPI.checkForUpdate()
+  }, 3000)
 })
 
 onUnmounted(() => {

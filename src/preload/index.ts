@@ -38,6 +38,11 @@ export interface ScrcpyAPI {
   quitApp: () => void
   cancelClose: () => void
   removeAllListeners: (channel: string) => void
+
+  // Auto Update
+  checkForUpdate: () => Promise<void>
+  onUpdateAvailable: (callback: (info: { version: string; notes: string; url: string }) => void) => void
+  openDownloadPage: (url: string) => void
 }
 
 // Types
@@ -159,5 +164,12 @@ contextBridge.exposeInMainWorld('scrcpyAPI', {
   cancelClose: () => ipcRenderer.send('close:cancel'),
   removeAllListeners: (channel: string) => {
     ipcRenderer.removeAllListeners(channel)
-  }
+  },
+
+  // Auto Update
+  checkForUpdate: () => ipcRenderer.invoke('update:check'),
+  onUpdateAvailable: (callback: any) => {
+    ipcRenderer.on('update:available', (_event, info) => callback(info))
+  },
+  openDownloadPage: (url: string) => ipcRenderer.invoke('update:openDownload', url),
 } as ScrcpyAPI)

@@ -1,10 +1,13 @@
-import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
+import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell } from 'electron'
 import { join } from 'path'
 import { registerDeviceIPC } from './ipc/device'
 import { registerScrcpyIPC } from './ipc/scrcpy'
 import { registerAdbIPC } from './ipc/adb'
 import { getTrayIconPath } from './utils/path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
+import { execSync } from 'child_process'
+
+const APP_VERSION = app.getVersion()
 
 // Simple JSON store (replaces electron-store, avoids asar issues)
 interface WindowState {
@@ -73,6 +76,37 @@ ipcMain.on('close:cancel', () => {
 })
 
 ipcMain.handle('window:isMaximized', () => mainWindow?.isMaximized() ?? false)
+
+// --- Auto Update Check ---
+let updateInfo: { version: string; notes: string; url: string } | null = null
+
+async function checkForUpdates(): Promise<void> {
+  try {
+    const result = execSync(
+      'curl -s -m 10 "https://api.github.com/repos/HYXJX2006/scrcpy-gui/releases/latest"',
+      { encoding: 'utf-8', windowsHide: true }
+    )
+    const release = JSON.parse(result)
+    const latestVersion = release.tag_name?.replace('v', '') || ''
+    const notes = release.body || ''
+    // Find the installer asset
+    const asset = release.assets?.find((a: any) => a.name?.includes('.exe'))
+    const downloadUrl = asset?.browser_download_url || ''
+
+    if (latestVersion && latestVersion !== APP_VERSION && downloadUrl) {
+      updateInfo = { version: latestVersion, notes, url: downloadUrl }
+      mainWindow?.webContents.send('update:available', updateInfo)
+    }
+  } catch {
+    // Network error, ignore
+  }
+}
+
+ipcMain.handle('update:check', () => checkForUpdates())
+ipcMain.handle('update:getInfo', () => updateInfo)
+ipcMain.handle('update:openDownload', (_event, url: string) => {
+  shell.openExternal(url)
+})
 
 function createWindow(): void {
   const saved = getWindowState()
