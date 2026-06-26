@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>scrcpy GUI - Android 投屏控制工具</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system,'Microsoft YaHei','Segoe UI',sans-serif; background: #0f1419; color: #fff; scroll-behavior: smooth; }
+  a { color:inherit; text-decoration:none; }
+
+  .nav { display:flex; justify-content:space-between; align-items:center; padding:16px 60px; background:rgba(0,0,0,0.3); position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
+  .nav-brand { font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .nav-brand span { color:#4A90D9; }
+  .nav-links { display:flex; gap:32px; font-size:14px; color:#aaa; }
+  .nav-links a:hover { color:#fff; }
+  .nav-download-btn { background:#4A90D9; color:#fff; border:none; padding:8px 24px; border-radius:20px; font-size:14px; cursor:pointer; font-weight:500; transition:background .2s; }
+  .nav-download-btn:hover { background:#3d89cc; }
+
+  .hero { text-align:center; padding:100px 20px 80px; background:linear-gradient(180deg,#0f1419 0%,#1a1a2e 100%); }
+  .hero h1 { font-size:52px; font-weight:800; margin-bottom:16px; }
+  .hero h1 span { background:linear-gradient(135deg,#4A90D9,#64B5F6,#89b4fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero p { font-size:18px; color:#888; margin-bottom:40px; max-width:500px; margin:0 auto 40px; line-height:1.6; }
+  .hero-download { background:linear-gradient(135deg,#4A90D9 0%,#64B5F6 100%); border:none; color:#fff; padding:18px 56px; border-radius:30px; font-size:18px; font-weight:600; cursor:pointer; transition:transform .2s,box-shadow .2s; }
+  .hero-download:hover { transform:scale(1.05); box-shadow:0 8px 24px rgba(74,144,217,0.4); }
+  .hero-info { color:#555; font-size:13px; margin-top:16px; }
+
+  .features { display:flex; justify-content:center; gap:40px; padding:80px 60px; flex-wrap:wrap; }
+  .feature-card { text-align:center; width:220px; padding:24px; border-radius:12px; transition:background .2s; }
+  .feature-card:hover { background:rgba(255,255,255,0.03); }
+  .feature-icon { font-size:40px; margin-bottom:12px; }
+  .feature-card h3 { font-size:16px; margin-bottom:8px; font-weight:600; }
+  .feature-card p { font-size:13px; color:#666; line-height:1.6; }
+
+  .showcase { text-align:center; padding:60px; background:#0a0e13; }
+  .showcase h2 { font-size:28px; margin-bottom:8px; }
+  .showcase .sub { color:#555; margin-bottom:40px; font-size:15px; }
+
+  .download { text-align:center; padding:80px 60px; background:linear-gradient(180deg,#0f1419 0%,#0a0e13 100%); }
+  .download h2 { font-size:28px; margin-bottom:8px; }
+  .download .sub { color:#555; margin-bottom:32px; }
+  .download-btn { display:inline-flex; align-items:center; gap:10px; background:#4A90D9; color:#fff; border:none; padding:16px 40px; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; transition:background .2s; }
+  .download-btn:hover { background:#3d89cc; }
+  .download .req { color:#45475a; font-size:12px; margin-top:20px; line-height:1.8; }
+
+  .footer { padding:32px 60px; text-align:center; border-top:1px solid #1e1e2e; color:#45475a; font-size:13px; }
+  .footer a { color:#4A90D9; }
+  .footer a:hover { text-decoration:underline; }
+
+  @media (max-width:768px) {
+    .nav { padding:16px 20px; }
+    .nav-links { display:none; }
+    .hero h1 { font-size:32px; }
+    .hero p { font-size:15px; }
+    .features { padding:40px 20px; gap:20px; }
+    .feature-card { width:100%; max-width:280px; }
+    .showcase { padding:40px 20px; }
+    .download { padding:40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-brand">📱 <span>scrcpy</span> GUI</div>
+  <div class="nav-links">
+    <a href="#features">功能特性</a>
+    <a href="#showcase">效果展示</a>
+    <a href="#download">下载安装</a>
+    <a href="https://github.com/Genymobile/scrcpy" target="_blank">开源项目</a>
+  </div>
+  <button class="nav-download-btn" onclick="document.getElementById('download').scrollIntoView({behavior:'smooth'})">免费下载</button>
+</div>
+
+<div class="hero">
+  <h1><span>scrcpy GUI</span></h1>
+  <p>将 Android 设备投屏到电脑<br>图形化操作，开箱即用</p>
+  <button class="hero-download" onclick="document.getElementById('download').scrollIntoView({behavior:'smooth'})">📥 立即下载</button>
+  <p class="hero-info">v1.0.0 · Windows 10/11 64位 · 内置 scrcpy v4.0 · 免费开源 · 无需 root</p>
+</div>
+
+<div class="features" id="features">
+  <div class="feature-card">
+    <div class="feature-icon">📡</div>
+    <h3>无线投屏</h3>
+    <p>USB 或 WiFi 连接，手机无需安装任何应用</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🎵</div>
+    <h3>音频同步</h3>
+    <p>Android 11+ 音频实时转发到电脑播放</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🎬</div>
+    <h3>屏幕录制</h3>
+    <p>一键录制为 MP4/MKV，支持音画同步录制</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">⚡</div>
+    <h3>极低延迟</h3>
+    <p>35-70ms 延迟，支持 H264/H265/AV1 编码</p>
+  </div>
+</div>
+
+<div class="showcase" id="showcase">
+  <h2>简洁直观的界面</h2>
+  <p class="sub">设备管理 · 投屏控制 · 设置面板 · 预设配置</p>
+  <div style="max-width:800px;margin:0 auto;background:#1a1a2e;border-radius:12px;padding:60px 20px;border:1px solid #2a2a3e;">
+    <p style="color:#555;"><span style="font-size:24px;">📱</span> 设备已连接 · 投屏运行中 · 日志实时显示</p>
+  </div>
+</div>
+
+<div class="download" id="download">
+  <h2>下载安装</h2>
+  <p class="sub">一键安装，开箱即用，无任何额外依赖</p>
+  <a href="https://github.com/HYXJX2006/scrcpy-gui/releases/tag/v1.0.0" target="_blank">
+    <button class="download-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      下载 Windows 版
+    </button>
+  </a>
+  <p class="req">
+    系统要求：Windows 10/11 64位 · Android 5.0+<br>
+    需开启 USB 调试（设置 → 开发者选项 → USB 调试）
+  </p>
+</div>
+
+<div class="footer">
+  <p>scrcpy GUI 基于 <a href="https://github.com/Genymobile/scrcpy" target="_blank">scrcpy v4.0</a> · Apache 2.0 开源协议 · © 2026</p>
+</div>
+
+</body>
+</html>
