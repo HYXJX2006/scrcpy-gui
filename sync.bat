@@ -21,11 +21,11 @@ del .sync-temp 2>nul
 
 REM 更新版本号（如果 package.json 有变更）
 echo [2/5] 推送到 GitHub...
-git push github main --force
-git push github gh-pages --force
+git push origin main
+git push origin gh-pages --force
 
 echo [3/5] 推送到 Gitee...
-git push gitee main --force
+git push gitee main
 git push gitee gh-pages --force
 
 echo [4/5] 更新 Release - 重编译安装包...
