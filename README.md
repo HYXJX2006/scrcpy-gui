@@ -22,6 +22,12 @@
 
 或直接使用绿色便携版：`dist/scrcpy-gui-portable/scrcpy GUI.exe`
 
+## 📖 使用说明
+
+[完整使用说明 → USAGE.md](USAGE.md)
+
+涵盖连接方式、快捷键、设置说明、预设配置、常见问题等。
+
 ## 🚀 快速开始
 
 ```bash
