@@ -165,6 +165,7 @@ function createTray(): void {
 }
 
 function registerIPC(): void {
+  registerDeviceIPC(ipcMain, mainWindow)
   registerScrcpyIPC(ipcMain)
   registerAdbIPC(ipcMain)
 
