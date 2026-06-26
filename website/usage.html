@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用帮助 - scrcpy GUI</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system,'Microsoft YaHei','Segoe UI',sans-serif; background: #0f1419; color: #ccc; line-height:1.8; }
+  a { color:#4A90D9; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  .nav { display:flex; justify-content:space-between; align-items:center; padding:16px 60px; background:rgba(0,0,0,0.3); position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
+  .nav-brand { font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .nav-brand span { color:#4A90D9; }
+  .nav-links { display:flex; gap:32px; font-size:14px; }
+  .nav-links a { color:#aaa; }
+  .nav-links a:hover { color:#fff; text-decoration:none; }
+  .nav-back { color:#4A90D9; }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px 60px; }
+
+  h1 { font-size:32px; color:#fff; margin-bottom:8px; }
+  h2 { font-size:22px; color:#fff; margin-top:40px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #1e1e2e; }
+  h3 { font-size:16px; color:#eee; margin-top:24px; margin-bottom:8px; }
+  h4 { font-size:14px; color:#ddd; margin-top:16px; margin-bottom:6px; }
+  p { margin-bottom:12px; font-size:14px; color:#aaa; }
+  ul, ol { margin-bottom:12px; padding-left:20px; }
+  li { font-size:14px; color:#aaa; margin-bottom:4px; }
+  strong { color:#eee; }
+
+  table { width:100%; border-collapse:collapse; margin:12px 0 20px; font-size:13px; }
+  th { background:#1a1a2e; color:#fff; padding:8px 12px; text-align:left; font-weight:600; border:1px solid #2a2a3e; }
+  td { padding:8px 12px; border:1px solid #2a2a3e; color:#aaa; }
+
+  code { background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:4px; font-size:13px; color:#89b4fa; font-family:'Cascadia Code','Fira Code',monospace; }
+  pre { background:#11111b; padding:16px; border-radius:8px; overflow-x:auto; border:1px solid #2a2a3e; margin:12px 0 20px; }
+  pre code { background:none; padding:0; color:#a6adc8; }
+
+  .tag { display:inline-block; background:rgba(74,144,217,0.15); color:#64B5F6; padding:0 8px; border-radius:4px; font-size:12px; font-weight:500; }
+  .tag-green { background:rgba(76,175,80,0.15); color:#81c784; }
+  .tag-orange { background:rgba(255,152,0,0.15); color:#ffb74d; }
+
+  .qa { margin:8px 0; padding:12px 16px; background:#1a1a2e; border-radius:8px; border-left:3px solid #4A90D9; }
+  .qa strong { display:block; margin-bottom:4px; }
+  .qa p { margin:0; font-size:13px; }
+
+  .footer { text-align:center; padding:32px; color:#45475a; font-size:13px; border-top:1px solid #1e1e2e; margin-top:40px; }
+  .footer a { color:#4A90D9; }
+
+  @media (max-width:768px) {
+    .nav { padding:16px 20px; }
+    .nav-links { gap:16px; font-size:13px; }
+    .container { padding:24px 16px; }
+    h1 { font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-brand">📱 <span>scrcpy</span> GUI</div>
+  <div class="nav-links">
+    <a href="index.html">首页</a>
+    <a href="index.html#features">功能</a>
+    <a href="index.html#download">下载</a>
+    <a href="usage.html" style="color:#4A90D9;">使用帮助</a>
+  </div>
+</div>
+
+<div class="container">
+
+<h1>📖 scrcpy GUI 使用说明</h1>
+<p>Android 设备投屏控制工具 — 完整使用指南</p>
+
+<h2>📋 目录</h2>
+<ol>
+  <li><a href="#requirements">系统要求</a></li>
+  <li><a href="#quickstart">快速上手</a></li>
+  <li><a href="#usb">USB 有线连接</a></li>
+  <li><a href="#wifi">WiFi 无线连接</a></li>
+  <li><a href="#control">投屏控制</a></li>
+  <li><a href="#settings">设置说明</a></li>
+  <li><a href="#presets">预设配置</a></li>
+  <li><a href="#shortcuts">快捷键</a></li>
+  <li><a href="#faq">常见问题</a></li>
+</ol>
+
+<!-- 系统要求 -->
+<h2 id="requirements">💻 系统要求</h2>
+<table>
+  <tr><th>项目</th><th>要求</th></tr>
+  <tr><td>操作系统</td><td>Windows 10/11 64位</td></tr>
+  <tr><td>手机系统</td><td>Android 5.0+（音频转发需 Android 11+）</td></tr>
+  <tr><td>USB 调试</td><td>需要开启</td></tr>
+  <tr><td>权限</td><td>无需 root，无需在手机安装任何应用</td></tr>
+</table>
+
+<h3>开启开发者选项</h3>
+<ol>
+  <li>手机 → <strong>设置</strong> → <strong>关于手机</strong></li>
+  <li>连续点击 <strong>版本号</strong> 7 次 → 提示「已开启开发者模式」</li>
+  <li>返回设置 → <strong>系统</strong> → <strong>开发者选项</strong></li>
+  <li>打开 <strong>USB 调试</strong></li>
+</ol>
+<p>部分手机（如小米）还需在开发者选项中开启 <strong>「USB 调试（安全设置）」</strong> 才能使用键鼠控制。</p>
+
+<!-- 快速上手 -->
+<h2 id="quickstart">🚀 快速上手</h2>
+<h3>安装</h3>
+<ol>
+  <li>从 <a href="https://hyxjx2006.github.io/scrcpy-gui/">官网</a> 点击下载安装包</li>
+  <li>双击安装，选择安装目录</li>
+  <li>安装完成后双击桌面快捷方式启动</li>
+</ol>
+
+<h3>首次使用流程</h3>
+<ol>
+  <li>启动应用</li>
+  <li>USB 连接手机</li>
+  <li>设备自动识别 → 点击设备选中</li>
+  <li>点「投屏」→「开始投屏」</li>
+</ol>
+
+<!-- USB 连接 -->
+<h2 id="usb">🔌 USB 有线连接</h2>
+<p><span class="tag-green">推荐</span> 最简单、延迟最低的方式。</p>
+<ol>
+  <li>用数据线将手机连接至电脑</li>
+  <li>手机上允许 <strong>USB 调试</strong></li>
+  <li>打开 scrcpy GUI → 左侧自动显示设备</li>
+  <li>点击设备 → 侧边栏「投屏」→ <strong>开始投屏</strong></li>
+</ol>
+<p>首次连接时，手机会弹出「允许 USB 调试吗？」对话框，勾选「始终允许」后确定。</p>
+
+<!-- WiFi 连接 -->
+<h2 id="wifi">📶 WiFi 无线连接</h2>
+
+<h3>方法一：ADB 无线配对（推荐）</h3>
+<ol>
+  <li>手机 → <strong>开发者选项</strong> → <strong>无线调试</strong> → 开启</li>
+  <li>点 <strong>「使用配对码配对设备」</strong> → 记录 IP 端口和配对码</li>
+  <li>电脑运行：<code>adb pair &lt;IP&gt;:&lt;端口&gt;</code></li>
+  <li>输入配对码 → 配对成功</li>
+  <li>在 scrcpy GUI 输入无线调试页面显示的 <strong>服务端口</strong>（非配对端口）</li>
+  <li>点击「连接」→ 开始投屏</li>
+</ol>
+
+<h3>方法二：USB 转无线</h3>
+<ol>
+  <li>先用 USB 连接手机</li>
+  <li>运行：<code>adb tcpip 5555</code></li>
+  <li>拔掉 USB 线</li>
+  <li>在 scrcpy GUI 首页输入手机 IP 地址</li>
+  <li>点「连接」→ 开始投屏</li>
+</ol>
+
+<h3>获取手机 IP 地址</h3>
+<ul>
+  <li>手机 → 设置 → 关于手机 → 状态信息 → IP 地址</li>
+  <li>USB 连接后运行：<code>adb shell ip addr show wlan0</code></li>
+</ul>
+<p>无线连接延迟比 USB 高，适合日常使用，游戏建议用 USB。</p>
+
+<!-- 投屏控制 -->
+<h2 id="control">🎮 投屏控制</h2>
+<table>
+  <tr><th>按钮</th><th>功能</th><th>说明</th></tr>
+  <tr><td><strong>息屏/亮屏</strong></td><td>切换手机屏幕</td><td>通过 ADB 模拟电源键</td></tr>
+  <tr><td><strong>旋转</strong></td><td>横屏/竖屏切换</td><td>通过 ADB 设置系统旋转</td></tr>
+  <tr><td><strong>截屏</strong></td><td>保存手机截图</td><td>保存到 <code>图片/scrcpy-screenshots/</code></td></tr>
+  <tr><td><strong>停止</strong></td><td>退出投屏</td><td>关闭 scrcpy 窗口</td></tr>
+  <tr><td><strong>快捷键</strong></td><td>显示快捷键列表</td><td>投屏中的悬浮参考</td></tr>
+</table>
+
+<!-- 设置说明 -->
+<h2 id="settings">⚙️ 设置说明</h2>
+
+<h3>视频设置</h3>
+<table>
+  <tr><th>选项</th><th>说明</th><th>推荐值</th></tr>
+  <tr><td>分辨率限制</td><td>限制画面尺寸，越小越流畅</td><td>游戏 1024，演示 原始尺寸</td></tr>
+  <tr><td>帧率限制</td><td>限制每秒帧数</td><td>日常 30fps，游戏 60fps</td></tr>
+  <tr><td>视频编码</td><td>H264 延迟最低，H265 画质更好</td><td>默认 H264</td></tr>
+  <tr><td>码率</td><td>码率越高画质越好</td><td>日常 8M，游戏 16M</td></tr>
+</table>
+
+<h3>音频设置</h3>
+<table>
+  <tr><th>选项</th><th>说明</th></tr>
+  <tr><td>音频</td><td>Android 11+ 支持音频转发</td></tr>
+  <tr><td>音频源</td><td>输出（默认）/ 播放 / 麦克风</td></tr>
+  <tr><td>音频编码</td><td>AAC / OPUS / FLAC / RAW</td></tr>
+  <tr><td>音频缓冲</td><td>值越小延迟越低，值越大越稳定</td></tr>
+</table>
+
+<h3>录屏设置</h3>
+<table>
+  <tr><th>选项</th><th>说明</th></tr>
+  <tr><td>录制格式</td><td>MP4（通用）/ MKV / OPUS / FLAC</td></tr>
+  <tr><td>仅录制不播放</td><td>后台录制，不显示投屏画面</td></tr>
+  <tr><td>时间限制</td><td>自动停止录制时间</td></tr>
+</table>
+
+<h3>高级设置</h3>
+<table>
+  <tr><th>选项</th><th>说明</th></tr>
+  <tr><td>键盘模式</td><td>SDK（默认）/ UHID（低延迟）/ Virtual</td></tr>
+  <tr><td>鼠标模式</td><td>SDK（默认）/ UHID（更精确）</td></tr>
+  <tr><td>视频源</td><td>设备屏幕（默认）/ 摄像头</td></tr>
+  <tr><td>游戏手柄</td><td>UHID / SDK 模式</td></tr>
+  <tr><td>不创建窗口</td><td>无窗口模式，适合后台录制</td></tr>
+</table>
+
+<!-- 预设配置 -->
+<h2 id="presets">📋 预设配置</h2>
+<table>
+  <tr><th>预设</th><th>适用场景</th></tr>
+  <tr><td>⚖️ 均衡模式</td><td>日常使用，默认设置</td></tr>
+  <tr><td>⚡ 低延迟模式</td><td>游戏等需要低延迟的场景</td></tr>
+  <tr><td>🎨 高画质</td><td>录屏演示，最大化画质</td></tr>
+  <tr><td>📶 无线模式</td><td>WiFi 连接时减少带宽</td></tr>
+  <tr><td>🎥 仅录屏</td><td>后台录制不投屏</td></tr>
+</table>
+
+<h3>自定义预设</h3>
+<ol>
+  <li>在「设置」页面调整好参数</li>
+  <li>点侧边栏「预设」</li>
+  <li>点「保存当前配置」→ 输入名称</li>
+  <li>下次直接点击预设即可一键应用</li>
+</ol>
+
+<!-- 快捷键 -->
+<h2 id="shortcuts">⌨️ 快捷键</h2>
+<p>投屏时在 scrcpy 窗口中使用：</p>
+<table>
+  <tr><th>快捷键</th><th>功能</th></tr>
+  <tr><td><code>Ctrl+f</code></td><td>切换全屏模式</td></tr>
+  <tr><td><code>Ctrl+x</code></td><td>退出全屏</td></tr>
+  <tr><td><code>Ctrl+o</code></td><td>息屏 / 亮屏</td></tr>
+  <tr><td><code>Ctrl+r</code></td><td>旋转画面</td></tr>
+  <tr><td><code>Ctrl+s</code></td><td>截屏</td></tr>
+  <tr><td><code>Ctrl+v</code></td><td>电脑剪贴板 → 手机</td></tr>
+  <tr><td><code>Ctrl+c</code></td><td>手机剪贴板 → 电脑</td></tr>
+  <tr><td><strong>鼠标右键</strong></td><td>返回键</td></tr>
+  <tr><td><strong>鼠标中键</strong></td><td>主页键</td></tr>
+  <tr><td><code>Ctrl+左键</code></td><td>最近任务</td></tr>
+  <tr><td><code>Ctrl+↑</code></td><td>音量+</td></tr>
+  <tr><td><code>Ctrl+↓</code></td><td>音量-</td></tr>
+  <tr><td><code>Ctrl+i</code></td><td>显示/隐藏 FPS</td></tr>
+  <tr><td><code>Ctrl+Shift+s</code></td><td>打开设置面板</td></tr>
+</table>
+
+<!-- 常见问题 -->
+<h2 id="faq">❓ 常见问题</h2>
+
+<div class="qa">
+  <strong>Q: 提示「找不到设备」</strong>
+  <p>确认 USB 调试已开启。换一根数据线（部分线只支持充电）。运行 <code>adb devices</code> 检查是否能识别。</p>
+</div>
+
+<div class="qa">
+  <strong>Q: 投屏画面卡顿</strong>
+  <p>使用 <strong>USB 有线连接</strong> 延迟最低。预设选择「低延迟模式」。降低分辨率和帧率。</p>
+</div>
+
+<div class="qa">
+  <strong>Q: 没有声音</strong>
+  <p>需要 Android 11+ 设备。检查设置中音频是否开启。部分小米机型音频转发可能有兼容问题。</p>
+</div>
+
+<div class="qa">
+  <strong>Q: WiFi 连接失败</strong>
+  <p>确认手机和电脑在同一个网络。确认手机已开启无线调试。尝试用 USB 先连接一次运行 <code>adb tcpip 5555</code>。</p>
+</div>
+
+<div class="qa">
+  <strong>Q: 关闭按钮点了没反应</strong>
+  <p>点击 × → 弹出「缩小到托盘」/「关闭应用」对话框。点「缩小到托盘」→ 窗口隐藏到系统托盘。左键点击托盘图标恢复窗口。右键托盘图标 → 退出。</p>
+</div>
+
+<div class="qa">
+  <strong>Q: 应用启动报错</strong>
+  <p>确保安装了 <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe">Microsoft Visual C++ Redistributable</a>。如果报 <code>electron-store</code> 错误，请重新下载最新版本。</p>
+</div>
+
+<div class="qa">
+  <strong>Q: 如何投屏不同网络下的手机？</strong>
+  <p>使用 <strong>ZeroTier</strong> 或 <strong>Tailscale</strong> 等虚拟组网工具，将电脑和手机加入同一个虚拟网络，然后在 GUI 中输入虚拟 IP 连接。</p>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>scrcpy GUI 基于 <a href="https://github.com/Genymobile/scrcpy" target="_blank">scrcpy v4.0</a> · Apache 2.0 · <a href="https://github.com/HYXJX2006/scrcpy-gui" target="_blank">GitHub</a></p>
+</div>
+
+</body>
+</html>
