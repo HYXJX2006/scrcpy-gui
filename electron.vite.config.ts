@@ -5,7 +5,7 @@ import UnoCSS from 'unocss/vite'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin({ exclude: ['electron-store'] })],
+    plugins: [externalizeDepsPlugin()],
     build: {
       rollupOptions: {
         external: []

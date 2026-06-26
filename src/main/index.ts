@@ -4,9 +4,36 @@ import { registerDeviceIPC } from './ipc/device'
 import { registerScrcpyIPC } from './ipc/scrcpy'
 import { registerAdbIPC } from './ipc/adb'
 import { getTrayIconPath } from './utils/path'
-import { existsSync } from 'fs'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { default: Store } = require('electron-store') as any
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
+
+// Simple JSON store (replaces electron-store, avoids asar issues)
+interface WindowState {
+  x?: number; y?: number; width: number; height: number; isMaximized: boolean
+}
+
+function createStore() {
+  const storePath = join(app.getPath('userData'), 'store.json')
+  let data: Record<string, any> = {}
+  if (existsSync(storePath)) {
+    try { data = JSON.parse(readFileSync(storePath, 'utf-8')) } catch { data = {} }
+  }
+  function save(): void {
+    const dir = dirname(storePath)
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
+    writeFileSync(storePath, JSON.stringify(data, null, 2), 'utf-8')
+  }
+  return {
+    get(key: string, fallback: any = undefined) {
+      const val = data[key]
+      return val === undefined ? fallback : val
+    },
+    set(key: string, val: any) {
+      data[key] = val
+      save()
+    }
+  }
+}
+function dirname(p: string): string { return p.slice(0, p.lastIndexOf('/')) || p.slice(0, p.lastIndexOf('\\')) || p }
 
 app.commandLine.appendSwitch('disable-gpu')
 app.commandLine.appendSwitch('no-sandbox')
@@ -18,14 +45,16 @@ let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let isCloseDialogShown = false
 
-interface WindowState {
-  x?: number; y?: number; width: number; height: number; isMaximized: boolean
-}
+const store = createStore()
 
-const store = new Store<{ windowState: WindowState }>({
-  name: 'scrcpy-gui-window',
-  defaults: { windowState: { width: 1100, height: 760, isMaximized: false } }
-})
+// Window state
+function getWindowState(): WindowState {
+  return store.get('windowState', { width: 1100, height: 760, isMaximized: false })
+}
+function saveWindowState(s: Partial<WindowState>) {
+  const current = getWindowState()
+  store.set('windowState', { ...current, ...s })
+}
 
 // 关闭弹窗 IPC
 function resetCloseDialogFlag(): void { isCloseDialogShown = false }
@@ -46,12 +75,12 @@ ipcMain.on('close:cancel', () => {
 ipcMain.handle('window:isMaximized', () => mainWindow?.isMaximized() ?? false)
 
 function createWindow(): void {
-  const savedState = store.get('windowState')
+  const saved = getWindowState()
 
   mainWindow = new BrowserWindow({
-    width: savedState.width,
-    height: savedState.height,
-    ...(savedState.x !== undefined && savedState.y !== undefined ? { x: savedState.x, y: savedState.y } : {}),
+    width: saved.width,
+    height: saved.height,
+    ...(saved.x !== undefined && saved.y !== undefined ? { x: saved.x, y: saved.y } : {}),
     minWidth: 900,
     minHeight: 600,
     frame: false,
@@ -65,7 +94,6 @@ function createWindow(): void {
     show: false
   })
 
-  // 拦截关闭，弹出确认对话框
   mainWindow.on('close', (event) => {
     if (tray && !isCloseDialogShown) {
       event.preventDefault()
@@ -82,7 +110,7 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  // 窗口状态持久化（带防抖）
+  // Window state persistence (debounced)
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   function debounceSave(): void {
     if (saveTimer) clearTimeout(saveTimer)
@@ -90,7 +118,7 @@ function createWindow(): void {
       if (!mainWindow?.isMaximized()) {
         const [width, height] = mainWindow?.getSize() || [1100, 760]
         const [x, y] = mainWindow?.getPosition() || [0, 0]
-        store.set('windowState', { x, y, width, height, isMaximized: false })
+        saveWindowState({ x, y, width, height, isMaximized: false })
       }
     }, 300)
   }
@@ -98,24 +126,22 @@ function createWindow(): void {
   mainWindow.on('resize', debounceSave)
   mainWindow.on('move', debounceSave)
   mainWindow.on('maximize', () => {
-    store.set('windowState', { ...store.get('windowState'), isMaximized: true })
+    saveWindowState({ isMaximized: true })
     mainWindow?.webContents.send('window:maximized', true)
   })
   mainWindow.on('unmaximize', () => {
-    store.set('windowState', { ...store.get('windowState'), isMaximized: false })
+    saveWindowState({ isMaximized: false })
     mainWindow?.webContents.send('window:maximized', false)
   })
 
-  // 恢复最大化
-  if (savedState.isMaximized) mainWindow?.maximize()
-
+  if (saved.isMaximized) mainWindow?.maximize()
   mainWindow.on('closed', () => { mainWindow = null })
 }
 
 function createTray(): void {
   const iconPath = getTrayIconPath()
   if (!existsSync(iconPath)) {
-    console.warn('托盘图标不存在:', iconPath)
+    console.warn('Tray icon not found:', iconPath)
     return
   }
   const icon = nativeImage.createFromPath(iconPath)
@@ -131,9 +157,9 @@ function createTray(): void {
   })
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: '显示窗口', click: () => { mainWindow?.show(); mainWindow?.focus() } },
+    { label: 'Show Window', click: () => { mainWindow?.show(); mainWindow?.focus() } },
     { type: 'separator' },
-    { label: '退出', click: () => { app.quit() } }
+    { label: 'Exit', click: () => { app.quit() } }
   ])
   tray.setContextMenu(contextMenu)
 }
@@ -147,18 +173,13 @@ function registerIPC(): void {
     if (mainWindow?.isMaximized()) mainWindow.unmaximize()
     else mainWindow?.maximize()
   })
-  ipcMain.on('window:close', () => {
-    mainWindow?.close()
-  })
+  ipcMain.on('window:close', () => mainWindow?.close())
 }
 
 app.whenReady().then(() => {
   registerIPC()
   createTray()
-
-  // 先创建窗口再注册 device IPC（需要 mainWindow）
   createWindow()
-  registerDeviceIPC(ipcMain, mainWindow)
 
   app.on('second-instance', () => {
     if (mainWindow) {
@@ -169,9 +190,7 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  if (process.platform !== 'darwin') app.quit()
 })
 
 export { mainWindow }
