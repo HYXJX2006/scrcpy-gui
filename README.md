@@ -4,6 +4,13 @@
 
 基于 [scrcpy v4.0](https://github.com/Genymobile/scrcpy) 的 Electron + Vue 3 图形界面封装。
 
+| 平台 | 地址 |
+|------|------|
+| 📦 **下载安装包** | [Gitee Release](https://gitee.com/hyxjx2006/scrcpy-gui/releases/tag/v1.0.1) |
+| 🇨🇳 **Gitee 镜像** | [gitee.com/hyxjx2006/scrcpy-gui](https://gitee.com/hyxjx2006/scrcpy-gui) |
+| 🌏 **GitHub 主仓库** | [github.com/HYXJX2006/scrcpy-gui](https://github.com/HYXJX2006/scrcpy-gui) |
+| 🌐 **产品官网** | [hyxjx2006.github.io/scrcpy-gui](https://hyxjx2006.github.io/scrcpy-gui) |
+
 ## ✨ 功能
 
 - 📱 **设备管理** — USB 自动发现、WiFi 无线连接、连接历史
