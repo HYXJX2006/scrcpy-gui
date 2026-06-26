@@ -56,7 +56,12 @@ export function getDefaultRecordDir(): string {
  */
 export function getTrayIconPath(): string {
   if (app.isPackaged) {
-    return join(process.resourcesPath, 'icon.ico')
+    const p1 = join(process.resourcesPath, 'icon.ico')
+    if (existsSync(p1)) return p1
+    // Check next to exe (portable layout)
+    const p2 = join(dirname(app.getPath('exe')), 'icon.ico')
+    if (existsSync(p2)) return p2
+    return p1
   }
   return join(app.getAppPath(), 'resources', 'icon.ico')
 }
