@@ -39,8 +39,10 @@
   .download { text-align:center; padding:80px 60px; background:linear-gradient(180deg,#0f1419 0%,#0a0e13 100%); }
   .download h2 { font-size:28px; margin-bottom:8px; }
   .download .sub { color:#555; margin-bottom:32px; }
-  .download-btn { display:inline-flex; align-items:center; gap:10px; background:#4A90D9; color:#fff; border:none; padding:16px 40px; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; transition:background .2s; }
-  .download-btn:hover { background:#3d89cc; }
+  .download-btn { display:inline-flex; align-items:center; gap:10px; background:#4A90D9; color:#fff; border:none; padding:16px 40px; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; transition:background .2s,transform .2s; }
+  .download-btn:hover { background:#3d89cc; transform:scale(1.03); }
+  .btn-primary { background:#28a745; }
+  .btn-primary:hover { background:#218838; }
   .download .req { color:#45475a; font-size:12px; margin-top:20px; line-height:1.8; }
 
   .footer { padding:32px 60px; text-align:center; border-top:1px solid #1e1e2e; color:#45475a; font-size:13px; }
@@ -69,14 +71,14 @@
     <a href="#download">下载安装</a>
     <a href="usage.html">使用帮助</a>
   </div>
-  <button class="nav-download-btn" onclick="window.location.href='https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe'">免费下载</button>
+  <a href="https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe"><button class="nav-download-btn">免费下载</button></a>
 </div>
 
 <div class="hero">
   <h1><span>scrcpy GUI</span></h1>
   <p>将 Android 设备投屏到电脑<br>图形化操作，开箱即用</p>
-  <button class="hero-download" onclick="window.location.href='https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe'">📥 立即下载</button>
-  <p class="hero-info">v1.0.0 · Windows 10/11 64位 · 内置 scrcpy v4.0 · 免费开源 · 无需 root</p>
+  <a href="https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe" style="text-decoration:none;"><button class="hero-download">📥 立即下载</button></a>
+  <p class="hero-info">v1.0.1 · Windows 10/11 64位 · 内置 scrcpy v4.0 · 免费开源 · 无需 root</p>
 </div>
 
 <div class="features" id="features">
@@ -112,22 +114,28 @@
 
 <div class="download" id="download">
   <h2>下载安装</h2>
-  <p class="sub">一键安装，开箱即用，内置 scrcpy + ADB</p>
+  <p class="sub">点一下直接下载，不跳转页面</p>
   <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-    <a href="https://github.com/HYXJX2006/scrcpy-gui/releases/latest" target="_blank" style="text-decoration:none;">
-      <button class="download-btn">
+    <a href="https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe" style="text-decoration:none;">
+      <button class="download-btn btn-primary">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        下载 Windows 版
+        一键安装版 (107MB)
       </button>
     </a>
-    <a href="https://cdn.jsdelivr.net/gh/HYXJX2006/scrcpy-gui@v1.0.2/dist/scrcpy-gui-portable.7z" style="text-decoration:none;">
-      <button class="download-btn" style="background:#6c757d;">
-        CDN 高速下载 (70MB)
+    <a href="https://raw.githubusercontent.com/HYXJX2006/scrcpy-gui/v1.0.2/website/download/parts/download.bat" style="text-decoration:none;">
+      <button class="download-btn" style="background:#4A90D9;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        🚀 CDN 高速下载 (脚本)
       </button>
     </a>
   </div>
+  <div style="margin-top:16px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;font-size:13px;">
+    <a href="https://ghproxy.com/https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe" style="color:#888;text-decoration:underline;" target="_blank">国内镜像: 安装版 (ghproxy)</a>
+    <a href="https://github.com/HYXJX2006/scrcpy-gui/releases/download/v1.0.1/scrcpy-gui-setup.exe" style="color:#888;text-decoration:underline;" target="_blank">备用: GitHub 直链</a>
+  </div>
   <p class="req">
     系统要求：Windows 10/11 64位 · Android 5.0+<br>
+    ⚡ 下载慢？点「国内镜像」或「CDN 高速下载」<br>
     需开启 USB 调试（设置 → 开发者选项 → USB 调试）
   </p>
 </div>
